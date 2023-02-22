@@ -1,14 +1,13 @@
 import { Button } from './Button.styled';
 import PropTypes from 'prop-types';
 
-export function LoadMoreBtn({ isBtnDisabled, onLoadMoreBtnClick }) {
+export function LoadMoreBtn({ onLoadMoreBtnClick }) {
   return (
-    <Button type="button" disabled={isBtnDisabled} onClick={onLoadMoreBtnClick}>
+    <Button type="button" onClick={onLoadMoreBtnClick}>
       Load more
     </Button>
   );
 }
 LoadMoreBtn.prototypes = {
   onLoadMoreBtnClick: PropTypes.func.isRequired,
-  isBtnDisabled: PropTypes.bool.isRequired,
 };

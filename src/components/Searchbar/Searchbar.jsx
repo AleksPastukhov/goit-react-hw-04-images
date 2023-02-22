@@ -3,21 +3,29 @@ import PropTypes from 'prop-types';
 import { SearchBar, SearchForm } from './Searchbar.styled';
 import { BiSearchAlt } from 'react-icons/bi';
 
-export function SearchQueryField({ onSabmit, isBtnDisabled, searchQuery }) {
+export function SearchQueryField({
+  onSabmit,
+  isBtnDisabled,
+  searchQuery,
+  pageNumberUpdate,
+  imagesDataUpdate,
+}) {
   const [userSearchQuery, setUserSearchQuery] = useState('');
 
   const onFormSabmit = e => {
     e.preventDefault();
     if (userSearchQuery.trim() !== '' && searchQuery !== userSearchQuery) {
       onSabmit(userSearchQuery);
+      pageNumberUpdate(1);
       setUserSearchQuery('');
-      isBtnDisabled(false);
+      isBtnDisabled(true);
+      imagesDataUpdate([]);
     }
   };
 
   const onInputValue = e => {
     setUserSearchQuery(e.currentTarget.value);
-    isBtnDisabled(true);
+    isBtnDisabled(false);
   };
 
   return (
@@ -44,4 +52,6 @@ SearchQueryField.prototypes = {
   onSabmit: PropTypes.func.isRequired,
   isBtnDisabled: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
+  pageNumberUpdate: PropTypes.func.isRequired,
+  imagesDataUpdate: PropTypes.func.isRequired,
 };
