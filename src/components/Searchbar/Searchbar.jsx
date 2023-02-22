@@ -1,54 +1,43 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchForm } from './Searchbar.styled';
 import { BiSearchAlt } from 'react-icons/bi';
 
-export class SearchQueryField extends Component {
-  state = {
-    userSearchQuery: '',
-  };
+export function SearchQueryField({ onSabmit, isBtnDisabled, searchQuery }) {
+  const [userSearchQuery, setUserSearchQuery] = useState('');
 
-  onFormSabmit = e => {
+  const onFormSabmit = e => {
     e.preventDefault();
-    if (
-      this.state.userSearchQuery.trim() !== '' &&
-      this.props.searchQuery !== this.state.userSearchQuery
-    ) {
-      this.props.onSabmit(this.state.userSearchQuery);
-      this.setState(() => ({
-        userSearchQuery: '',
-      }));
-      this.props.isBtnDisabled(false);
+    if (userSearchQuery.trim() !== '' && searchQuery !== userSearchQuery) {
+      onSabmit(userSearchQuery);
+      setUserSearchQuery('');
+      isBtnDisabled(false);
     }
   };
 
-  onInputValue = e => {
-    const { value } = e.currentTarget;
-    this.setState({ userSearchQuery: value });
-
-    this.props.isBtnDisabled(true);
+  const onInputValue = e => {
+    setUserSearchQuery(e.currentTarget.value);
+    isBtnDisabled(true);
   };
 
-  render() {
-    return (
-      <SearchBar>
-        <SearchForm onSubmit={this.onFormSabmit}>
-          <button>
-            <BiSearchAlt />
-          </button>
+  return (
+    <SearchBar>
+      <SearchForm onSubmit={onFormSabmit}>
+        <button aria-label="Search button">
+          <BiSearchAlt />
+        </button>
 
-          <input
-            onChange={this.onInputValue}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.userSearchQuery}
-          />
-        </SearchForm>
-      </SearchBar>
-    );
-  }
+        <input
+          onChange={onInputValue}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={userSearchQuery}
+        />
+      </SearchForm>
+    </SearchBar>
+  );
 }
 
 SearchQueryField.prototypes = {
