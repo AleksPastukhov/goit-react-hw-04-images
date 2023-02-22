@@ -5,20 +5,18 @@ import { Overlay, Modal } from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 export function ModalWindow({ onCloseModal, children }) {
-  const onEscPress = e => {
-    if (e.code === 'Escape') {
-      onCloseModal();
-    }
-  };
-
   useEffect(() => {
+    const onEscPress = e => {
+      if (e.code === 'Escape') {
+        onCloseModal();
+      }
+    };
     window.addEventListener('keydown', onEscPress);
 
     return () => {
       window.removeEventListener('keydown', onEscPress);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onCloseModal]);
 
   const onBackdropClick = e => {
     if (e.currentTarget === e.target) {
