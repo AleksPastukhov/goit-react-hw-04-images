@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchGalleryImages } from '../../services/pixabay-api';
 import GlobalStyle from '../GlobalStyle';
+import { toast } from 'react-toastify';
 import { GallarySet } from '../ImageGallery/ImageGallery';
 import { SearchQueryField } from '../Searchbar/Searchbar';
 import { Wrapper } from './App.styled';
@@ -32,33 +32,37 @@ export function App() {
           setImagesData(prevState => [...prevState, ...imageSet.hits]);
           setStatus(Status.RESOLVED);
           setButtonDisabled(true);
-          if (imageSet.totalHits !== 0 && page === 1) {
-            toast.success(
-              `Hooray!!! ${imageSet.totalHits} images were found for your request.`
-            );
-          }
-          if (imageSet.totalHits === 0) {
-            setButtonDisabled(false);
-            toast.error(
-              `UpsOops!!! We did not find any images for this request. Try changing the query.`
-            );
-          }
-          if (
-            imageSet.totalHits / imageSet.hits.length < page ||
-            (imageSet.totalHits === imageSet.hits.length * page && page !== 1)
-          ) {
-            setButtonDisabled(false);
-            toast.error(`Sorry we have nothing more to show you.`);
-          }
-          if (imageSet.totalHits === imageSet.hits.length && page === 1) {
-            setButtonDisabled(false);
-          }
+          showMessage(imageSet, page);
         })
         .catch(() => {
           setStatus(Status.REJECTED);
         });
     }
   }, [searchQuery, page]);
+
+  function showMessage(data, page) {
+    if (data.totalHits !== 0 && page === 1) {
+      toast.success(
+        `Hooray!!! ${data.totalHits} images were found for your request.`
+      );
+    }
+    if (data.totalHits === 0) {
+      setButtonDisabled(false);
+      toast.error(
+        `UpsOops!!! We did not find any images for this request. Try changing the query.`
+      );
+    }
+    if (
+      data.totalHits / data.hits.length < page ||
+      (data.totalHits === data.hits.length * page && page !== 1)
+    ) {
+      setButtonDisabled(false);
+      toast.error(`Sorry we have nothing more to show you.`);
+    }
+    if (data.totalHits === data.hits.length && page === 1) {
+      setButtonDisabled(false);
+    }
+  }
 
   return (
     <Wrapper>
