@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchFofm } from './Searchbar.styled';
@@ -5,35 +6,39 @@ import { BiSearchAlt } from 'react-icons/bi';
 import { object, string } from 'yup';
 
 let userSchema = object({
-  searchQueryField: string().required(),
+  queryField: string(),
 });
 
 export function SearchQueryField({
-  onSubmit,
+  setSearchQuery,
   setIsButtonVisible,
   searchQuery,
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const onFormSubmit = (value, action) => {
-    const userSearchQuery = value.searchQueryField;
-    console.dir(action);
-    console.log(action.setFieldValue());
-    if (userSearchQuery.trim() !== '' && searchQuery !== userSearchQuery) {
-      onSubmit(userSearchQuery);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = e => {
+    if (inputValue.trim() !== '' && searchQuery !== inputValue) {
+      setSearchQuery(inputValue);
       pageNumberUpdate(1);
       setIsButtonVisible(true);
       imagesDataUpdate([]);
+      setInputValue('');
     }
-    action.resetForm();
+  };
+
+  const handleChange = e => {
+    setInputValue(e.currentTarget.value);
+    setIsButtonVisible(false);
   };
 
   return (
     <SearchBar>
       <Formik
-        initialValues={{ searchQueryField: '' }}
+        initialValues={{ queryField: '' }}
+        onSubmit={handleSubmit}
         validationSchema={userSchema}
-        onSubmit={onFormSubmit}
       >
         <SearchFofm>
           <button type="submit" aria-label="Search button">
@@ -42,12 +47,15 @@ export function SearchQueryField({
 
           <Field
             type="text"
-            name="searchQueryField"
+            name="queryField"
+            value={inputValue}
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
+            required
+            onChange={handleChange}
           />
-          <ErrorMessage name="searchQueryField" component="div" />
+          <ErrorMessage name="queryField" component="div" />
         </SearchFofm>
       </Formik>
     </SearchBar>

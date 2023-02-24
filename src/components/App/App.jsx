@@ -97,7 +97,7 @@ export function App() {
         theme="light"
       />
       <SearchQueryField
-        onSubmit={setSearchQuery}
+        setSearchQuery={setSearchQuery}
         pageNumberUpdate={setPage}
         imagesDataUpdate={setImagesData}
         searchQuery={searchQuery}
