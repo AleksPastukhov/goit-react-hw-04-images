@@ -1,3 +1,4 @@
+// import { useState } from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchFofm } from './Searchbar.styled';
@@ -9,22 +10,23 @@ let userSchema = object({
 });
 
 export function SearchQueryField({
-  onSabmit,
+  onSubmit,
   setIsButtonVisible,
   searchQuery,
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const onFormSabmit = (value, { resetForm }) => {
+  const onFormSubmit = (value, action) => {
     const userSearchQuery = value.searchQueryField;
+    console.dir(action);
+    console.log(action.setFieldValue());
     if (userSearchQuery.trim() !== '' && searchQuery !== userSearchQuery) {
-      onSabmit(userSearchQuery);
+      onSubmit(userSearchQuery);
       pageNumberUpdate(1);
       setIsButtonVisible(true);
       imagesDataUpdate([]);
     }
-
-    resetForm();
+    action.resetForm();
   };
 
   return (
@@ -32,7 +34,7 @@ export function SearchQueryField({
       <Formik
         initialValues={{ searchQueryField: '' }}
         validationSchema={userSchema}
-        onSubmit={onFormSabmit}
+        onSubmit={onFormSubmit}
       >
         <SearchFofm>
           <button type="submit" aria-label="Search button">

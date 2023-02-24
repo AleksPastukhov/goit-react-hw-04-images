@@ -46,7 +46,20 @@ export function App() {
     if (status !== Status.RESOLVED) {
       return;
     }
-    if (totalHits === 0) {
+
+    if (totalHits < imagesData.length * page) {
+      setStatus(Status.IDLE);
+    }
+
+    if (totalHits !== 0 && page === 1 && imagesData.length !== 0) {
+      setStatus(Status.IDLE);
+      toast.success(
+        `Hooray!!! ${totalHits} images were found for your request.`
+      );
+    }
+
+    if (imagesData.length === 0) {
+      setStatus(Status.REJECTED);
       setIsButtonVisible(false);
       toast.error(
         `UpsOops!!! We did not find any images for this request. Try changing the query.`
@@ -54,21 +67,17 @@ export function App() {
       return;
     }
 
-    if (totalHits !== 0 && page === 1 && imagesData.length !== 0) {
-      toast.success(
-        `Hooray!!! ${totalHits} images were found for your request.`
-      );
-    }
-
     if (
       (totalHits < imagesData.length && page !== 1) ||
       (totalHits === imagesData.length && page !== 1)
     ) {
+      setStatus(Status.REJECTED);
       setIsButtonVisible(false);
       toast.error(`Sorry we have nothing more to show you.`);
     }
 
     if (totalHits === imagesData.length && page === 1) {
+      setStatus(Status.IDLE);
       setIsButtonVisible(false);
     }
   }, [totalHits, status, page, imagesData]);
@@ -88,7 +97,7 @@ export function App() {
         theme="light"
       />
       <SearchQueryField
-        onSabmit={setSearchQuery}
+        onSubmit={setSearchQuery}
         pageNumberUpdate={setPage}
         imagesDataUpdate={setImagesData}
         searchQuery={searchQuery}
