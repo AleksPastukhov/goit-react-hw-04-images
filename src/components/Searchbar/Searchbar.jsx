@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
-import { SearchBar, SearchForm } from './Searchbar.styled';
+import { SearchBar, SearchFofm } from './Searchbar.styled';
 import { BiSearchAlt } from 'react-icons/bi';
+import { object, string } from 'yup';
+
+let userSchema = object({
+  searchQueryField: string().required(),
+});
 
 export function SearchQueryField({
   onSabmit,
@@ -10,40 +15,40 @@ export function SearchQueryField({
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const [userSearchQuery, setUserSearchQuery] = useState('');
-
-  const onFormSabmit = e => {
-    e.preventDefault();
+  const onFormSabmit = (value, { resetForm }) => {
+    const userSearchQuery = value.searchQueryField;
     if (userSearchQuery.trim() !== '' && searchQuery !== userSearchQuery) {
       onSabmit(userSearchQuery);
       pageNumberUpdate(1);
-      setUserSearchQuery('');
       setIsButtonVisible(true);
       imagesDataUpdate([]);
     }
-  };
 
-  const onInputValue = e => {
-    setUserSearchQuery(e.currentTarget.value);
-    setIsButtonVisible(false);
+    resetForm();
   };
 
   return (
     <SearchBar>
-      <SearchForm onSubmit={onFormSabmit}>
-        <button aria-label="Search button">
-          <BiSearchAlt />
-        </button>
+      <Formik
+        initialValues={{ searchQueryField: '' }}
+        validationSchema={userSchema}
+        onSubmit={onFormSabmit}
+      >
+        <SearchFofm>
+          <button type="submit" aria-label="Search button">
+            <BiSearchAlt />
+          </button>
 
-        <input
-          onChange={onInputValue}
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          value={userSearchQuery}
-        />
-      </SearchForm>
+          <Field
+            type="text"
+            name="searchQueryField"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+          <ErrorMessage name="searchQueryField" component="div" />
+        </SearchFofm>
+      </Formik>
     </SearchBar>
   );
 }
