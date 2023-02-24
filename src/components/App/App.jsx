@@ -17,52 +17,61 @@ const Status = {
 };
 
 export function App() {
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState(Status.IDLE);
   const [imagesData, setImagesData] = useState([]);
+  const [totalHits, setTotalHits] = useState(0);
 
   useEffect(() => {
-    if (searchQuery !== '') {
-      setStatus(Status.PENDING);
-      setButtonDisabled(false);
-      fetchGalleryImages(page, searchQuery)
-        .then(imageSet => {
-          setImagesData(prevState => [...prevState, ...imageSet.hits]);
-          setStatus(Status.RESOLVED);
-          setButtonDisabled(true);
-          showMessage(imageSet, page);
-        })
-        .catch(() => {
-          setStatus(Status.REJECTED);
-        });
+    if (searchQuery === '') {
+      return;
     }
+    setStatus(Status.PENDING);
+    setIsButtonVisible(false);
+    fetchGalleryImages(page, searchQuery)
+      .then(imageSet => {
+        setImagesData(prevState => [...prevState, ...imageSet.hits]);
+        setStatus(Status.RESOLVED);
+        setIsButtonVisible(true);
+        setTotalHits(imageSet.totalHits);
+      })
+      .catch(() => {
+        setStatus(Status.REJECTED);
+      });
   }, [searchQuery, page]);
 
-  function showMessage(data, page) {
-    if (data.totalHits !== 0 && page === 1) {
-      toast.success(
-        `Hooray!!! ${data.totalHits} images were found for your request.`
-      );
+  useEffect(() => {
+    if (status !== Status.RESOLVED) {
+      return;
     }
-    if (data.totalHits === 0) {
-      setButtonDisabled(false);
+    if (totalHits === 0) {
+      setIsButtonVisible(false);
       toast.error(
         `UpsOops!!! We did not find any images for this request. Try changing the query.`
       );
+      return;
     }
+
+    if (totalHits !== 0 && page === 1 && imagesData.length !== 0) {
+      toast.success(
+        `Hooray!!! ${totalHits} images were found for your request.`
+      );
+    }
+
     if (
-      data.totalHits / data.hits.length < page ||
-      (data.totalHits === data.hits.length * page && page !== 1)
+      (totalHits < imagesData.length && page !== 1) ||
+      (totalHits === imagesData.length && page !== 1)
     ) {
-      setButtonDisabled(false);
+      setIsButtonVisible(false);
       toast.error(`Sorry we have nothing more to show you.`);
     }
-    if (data.totalHits === data.hits.length && page === 1) {
-      setButtonDisabled(false);
+
+    if (totalHits === imagesData.length && page === 1) {
+      setIsButtonVisible(false);
     }
-  }
+  }, [totalHits, status, page, imagesData]);
 
   return (
     <Wrapper>
@@ -83,19 +92,17 @@ export function App() {
         pageNumberUpdate={setPage}
         imagesDataUpdate={setImagesData}
         searchQuery={searchQuery}
-        isBtnDisabled={setButtonDisabled}
+        setIsButtonVisible={setIsButtonVisible}
       />
       <GallarySet
-        status={status}
         imagesData={imagesData}
-        searchQuery={searchQuery}
-        isBtnDisabled={buttonDisabled}
+        isButtonVisible={isButtonVisible}
         onLoadMoreBtnClick={() => {
           setPage(prevState => prevState + 1);
         }}
         page={page}
       />
-      {status === 'pending' && <Loader />}
+      {status === Status.PENDING && <Loader />}
       <GlobalStyle />
     </Wrapper>
   );

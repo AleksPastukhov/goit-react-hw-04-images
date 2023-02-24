@@ -11,7 +11,7 @@ export const fetchGalleryImages = async (nextStatePage, nextName) => {
     orientation: 'horizontal',
     safesearch: 'true',
     page: `${nextStatePage}`,
-    per_page: '100',
+    per_page: '200',
   };
   const resolve = await axios(BASE_URL, { params });
 

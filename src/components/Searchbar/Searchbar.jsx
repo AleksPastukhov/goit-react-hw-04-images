@@ -5,7 +5,7 @@ import { BiSearchAlt } from 'react-icons/bi';
 
 export function SearchQueryField({
   onSabmit,
-  isBtnDisabled,
+  setIsButtonVisible,
   searchQuery,
   pageNumberUpdate,
   imagesDataUpdate,
@@ -18,14 +18,14 @@ export function SearchQueryField({
       onSabmit(userSearchQuery);
       pageNumberUpdate(1);
       setUserSearchQuery('');
-      isBtnDisabled(true);
+      setIsButtonVisible(true);
       imagesDataUpdate([]);
     }
   };
 
   const onInputValue = e => {
     setUserSearchQuery(e.currentTarget.value);
-    isBtnDisabled(false);
+    setIsButtonVisible(false);
   };
 
   return (
@@ -50,7 +50,7 @@ export function SearchQueryField({
 
 SearchQueryField.prototypes = {
   onSabmit: PropTypes.func.isRequired,
-  isBtnDisabled: PropTypes.func.isRequired,
+  setIsButtonVisible: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
   pageNumberUpdate: PropTypes.func.isRequired,
   imagesDataUpdate: PropTypes.func.isRequired,

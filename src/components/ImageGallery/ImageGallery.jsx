@@ -3,7 +3,11 @@ import { ImageGallery } from './ImageGallery.styled';
 import { ImageItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { LoadMoreBtn } from '../Button/Button';
 
-export function GallarySet({ isBtnDisabled, onLoadMoreBtnClick, imagesData }) {
+export function GallarySet({
+  isButtonVisible,
+  onLoadMoreBtnClick,
+  imagesData,
+}) {
   return (
     <>
       <ImageGallery>
@@ -18,18 +22,15 @@ export function GallarySet({ isBtnDisabled, onLoadMoreBtnClick, imagesData }) {
           );
         })}
       </ImageGallery>
-      {isBtnDisabled && (
-        <LoadMoreBtn
-          disabled={isBtnDisabled}
-          onLoadMoreBtnClick={onLoadMoreBtnClick}
-        />
+      {isButtonVisible && (
+        <LoadMoreBtn onLoadMoreBtnClick={onLoadMoreBtnClick} />
       )}
     </>
   );
 }
 
 GallarySet.prototypes = {
-  isBtnDisabled: PropTypes.bool.isRequired,
+  isButtonVisible: PropTypes.bool.isRequired,
   onLoadMoreBtnClick: PropTypes.func.isRequired,
   imagesData: PropTypes.arrayOf(
     PropTypes.shape({
