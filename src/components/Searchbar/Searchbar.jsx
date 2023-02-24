@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchFofm } from './Searchbar.styled';
