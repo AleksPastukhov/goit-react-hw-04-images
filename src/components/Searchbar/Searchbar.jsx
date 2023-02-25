@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchFofm } from './Searchbar.styled';
@@ -16,12 +15,13 @@ export function SearchQueryField({
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const handleSubmit = e => {
+  const handleSubmit = (e, { resetForm }) => {
     if (e.queryField.trim() !== '' && searchQuery !== e.queryField) {
       setSearchQuery(e.queryField);
       pageNumberUpdate(1);
       setIsButtonVisible(true);
       imagesDataUpdate([]);
+      resetForm();
     }
   };
 
