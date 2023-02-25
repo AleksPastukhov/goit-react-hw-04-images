@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Formik, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import { SearchBar, SearchFofm } from './Searchbar.styled';
@@ -16,21 +16,13 @@ export function SearchQueryField({
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const [inputValue, setInputValue] = useState('');
-
   const handleSubmit = e => {
-    if (inputValue.trim() !== '' && searchQuery !== inputValue) {
-      setSearchQuery(inputValue);
+    if (e.queryField.trim() !== '' && searchQuery !== e.queryField) {
+      setSearchQuery(e.queryField);
       pageNumberUpdate(1);
       setIsButtonVisible(true);
       imagesDataUpdate([]);
-      setInputValue('');
     }
-  };
-
-  const handleChange = e => {
-    setInputValue(e.currentTarget.value);
-    setIsButtonVisible(false);
   };
 
   return (
@@ -48,12 +40,10 @@ export function SearchQueryField({
           <Field
             type="text"
             name="queryField"
-            value={inputValue}
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
             required
-            onChange={handleChange}
           />
           <ErrorMessage name="queryField" component="div" />
         </SearchFofm>

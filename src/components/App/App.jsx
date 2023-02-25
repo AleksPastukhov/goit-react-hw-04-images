@@ -47,7 +47,7 @@ export function App() {
       return;
     }
 
-    if (totalHits < imagesData.length * page) {
+    if (totalHits > imagesData.length * page) {
       setStatus(Status.IDLE);
     }
 
