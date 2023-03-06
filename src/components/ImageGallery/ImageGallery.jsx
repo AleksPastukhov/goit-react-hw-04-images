@@ -1,13 +1,8 @@
 import PropTypes from 'prop-types';
 import { ImageGallery } from './ImageGallery.styled';
 import { ImageItem } from '../ImageGalleryItem/ImageGalleryItem';
-import { LoadMoreBtn } from '../Button/Button';
 
-export function GallarySet({
-  isButtonVisible,
-  onLoadMoreBtnClick,
-  imagesData,
-}) {
+export function GallarySet({ imagesData }) {
   return (
     <>
       <ImageGallery>
@@ -22,16 +17,11 @@ export function GallarySet({
           );
         })}
       </ImageGallery>
-      {isButtonVisible && (
-        <LoadMoreBtn onLoadMoreBtnClick={onLoadMoreBtnClick} />
-      )}
     </>
   );
 }
 
 GallarySet.prototypes = {
-  isButtonVisible: PropTypes.bool.isRequired,
-  onLoadMoreBtnClick: PropTypes.func.isRequired,
   imagesData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

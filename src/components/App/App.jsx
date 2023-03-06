@@ -8,6 +8,7 @@ import { GallarySet } from '../ImageGallery/ImageGallery';
 import { SearchQueryField } from '../Searchbar/Searchbar';
 import { Wrapper } from './App.styled';
 import { Loader } from '../Loader/Loader';
+import { LoadMoreBtn } from '../Button/Button';
 
 const Status = {
   IDLE: 'idle',
@@ -103,14 +104,14 @@ export function App() {
         searchQuery={searchQuery}
         setIsButtonVisible={setIsButtonVisible}
       />
-      <GallarySet
-        imagesData={imagesData}
-        isButtonVisible={isButtonVisible}
-        onLoadMoreBtnClick={() => {
-          setPage(prevState => prevState + 1);
-        }}
-        page={page}
-      />
+      <GallarySet imagesData={imagesData} page={page} />
+      {isButtonVisible && (
+        <LoadMoreBtn
+          onLoadMoreBtnClick={() => {
+            setPage(prevState => prevState + 1);
+          }}
+        />
+      )}
       {status === Status.PENDING && <Loader />}
       <GlobalStyle />
     </Wrapper>
