@@ -15,13 +15,12 @@ export function SearchQueryField({
   pageNumberUpdate,
   imagesDataUpdate,
 }) {
-  const handleSubmit = (e, { resetForm }) => {
+  const handleSubmit = e => {
     if (e.queryField.trim() !== '' && searchQuery !== e.queryField) {
       setSearchQuery(e.queryField);
       pageNumberUpdate(1);
       setIsButtonVisible(true);
       imagesDataUpdate([]);
-      resetForm();
     }
   };
 
